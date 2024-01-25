@@ -42,24 +42,47 @@ class UploadScoreService {
 
     await this.scoresRepository.save(score);
 
-    const noUploadScores = await this.scoresRepository.findByStatus(false);
+    // const noUploadScores = await this.scoresRepository.findByStatus(false);
 
-    if (noUploadScores.length === 0) {
-      return { score: ScoreMap.toDTO(score), upload: '0 scores' };
-    }
+    // if (noUploadScores.length === 0) {
+    //   return { score: ScoreMap.toDTO(score), upload: '0 scores' };
+    // }
 
-    noUploadScores.forEach(async score => {
-      score.status = true;
+    // noUploadScores.forEach(async score => {
+    //   score.status = true;
+
+    //   await this.scoresRepository.save(score);
+    // });
+
+    score.status = true;
+
+    await this.scoresRepository.save(score);
+
+    fetch(`http://167.71.20.221/scores`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify(score),
+    }).then(() => {
+      return score;
+
+    }).catch(async () => {
+      // noUploadScores.forEach(async score => {
+      //   score.status = false;
+
+      //   await this.scoresRepository.save(score);
+      // });
+
+      score.status = false;
 
       await this.scoresRepository.save(score);
+
+      throw new AppError('Fetch erro in upload.');
     });
 
-    fetch(`${api.url}/scores/createAll`, {
-      method: "POST",
-      body: JSON.stringify(noUploadScores),
-    });
-
-    return ScoreMap.toDTO(score);
+    // return ScoreMap.toDTO(score);
   }
 }
 
