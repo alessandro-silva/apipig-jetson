@@ -31,27 +31,41 @@ class UploadScoreService {
     score.file = file;
     score.status = true;
 
-    await this.scoresRepository.save(score);
-    const scoreWithRelation = await this.scoresRepository.findById(id);
-    if (!scoreWithRelation) {
-      throw new AppError('Score does not exists.');
-    }
+    const scoreWithRelation = await this.scoresRepository.save(score);
+    // const scoreWithRelation = await this.scoresRepository.findById(id);
+    // if (!scoreWithRelation) {
+    //   throw new AppError('Score does not exists.');
+    // }
 
-    const scoreReturn = await fetch(`http://167.71.20.221/scores`, {
+    const scoreReturn = await fetch(`http://localhost:3334/scores`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(scoreWithRelation),
-    }).then(async () => {
-      if (score.file) {
-        await this.storageProvider.delete(score.file, 'scores/file');
+    }).then(async (response) => {
+      if (response.status === 200) {
+        if (score.file) {
+          await this.storageProvider.delete(score.file, 'scores/file');
+        }
+
+        await this.storageProvider.save(file, 'scores/file');
+
+        return response.json();
       }
 
-      await this.storageProvider.save(file, 'scores/file');
+      if (response.status === 400) {
+        const text = await response.text()
+        const { _, message } = JSON.parse(text);
 
-      return score;
+        return { statusCode: response.status, message  }
+      }
+
+      score.status = false;
+      await this.scoresRepository.save(score);
+
+      throw new AppError('Score status false.');
     }).catch(async () => {
       score.status = false;
 
