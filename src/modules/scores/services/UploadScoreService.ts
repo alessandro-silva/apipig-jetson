@@ -8,7 +8,6 @@ import IScoresRepository from '../repositories/IScoresRepository';
 interface IRequest {
   id: string;
   file: string;
-  token: string;
 }
 
 @injectable()
@@ -21,23 +20,38 @@ class UploadScoreService {
     private storageProvider: IStorageProvider,
   ) { }
 
-  public async execute({ file, id, token }: IRequest): Promise<any> {
+  public async execute({ file, id }: IRequest): Promise<any> {
     const score = await this.scoresRepository.findById(id);
 
     if (!score) {
       throw new AppError('Score does not exists.');
     }
 
+    const { _, token } = await fetch('http://167.71.20.221/sessions', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ cpf: '157' }),
+    }).then(async (response) => {
+      if (response.status === 200) {
+        return response.json();
+      }
+
+      const text = await response.text()
+      const { _, message } = JSON.parse(text);
+
+      return { statusCode: response.status, message  }
+    }).catch(async () => {
+      throw new AppError('Fetch erro in sessions.');
+    });
+
     score.file = file;
     score.status = true;
 
     const scoreWithRelation = await this.scoresRepository.save(score);
-    // const scoreWithRelation = await this.scoresRepository.findById(id);
-    // if (!scoreWithRelation) {
-    //   throw new AppError('Score does not exists.');
-    // }
 
-    const scoreReturn = await fetch(`http://localhost:3334/scores`, {
+    const scoreReturn = await fetch(`http://167.71.20.221/scores`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -68,7 +82,6 @@ class UploadScoreService {
       throw new AppError('Score status false.');
     }).catch(async () => {
       score.status = false;
-
       await this.scoresRepository.save(score);
 
       throw new AppError('Fetch erro in upload.');
