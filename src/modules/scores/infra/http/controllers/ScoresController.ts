@@ -80,7 +80,7 @@ export default class ScoresController {
   }
 
   public async uploadFile(req: Request, res: Response): Promise<Response> {
-    const { id, token } = req.query;
+    const { id } = req.query;
 
     const file = req.file?.filename;
 
@@ -88,7 +88,6 @@ export default class ScoresController {
 
     const score = await uploadScore.execute({
       id: String(id),
-      token: String(token),
       file: file ? file : '',
     });
 

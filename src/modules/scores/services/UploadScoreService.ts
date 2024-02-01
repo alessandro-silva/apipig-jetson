@@ -41,9 +41,9 @@ class UploadScoreService {
       const text = await response.text()
       const { _, message } = JSON.parse(text);
 
-      return { statusCode: response.status, message  }
-    }).catch(async () => {
-      throw new AppError('Fetch erro in sessions.');
+      throw new AppError(message, response.status);
+    }).catch(async (err) => {
+      throw new AppError(err.message);
     });
 
     score.file = file;
@@ -80,7 +80,7 @@ class UploadScoreService {
       await this.scoresRepository.save(score);
 
       throw new AppError('Score status false.');
-    }).catch(async () => {
+    }).catch(async (err) => {
       score.status = false;
       await this.scoresRepository.save(score);
 
