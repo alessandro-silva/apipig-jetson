@@ -8,6 +8,7 @@ export class ScoreMap {
   static toDTO({
     id,
     weight,
+    type,
     quantity,
     start_date,
     end_date,
@@ -15,10 +16,14 @@ export class ScoreMap {
     file,
     file_url,
     markings,
+    producer_id,
+    created_at,
+    updated_at,
   }: Score): IScoreResponseDTO {
     const score = classToClass({
       id,
       weight,
+      type,
       quantity,
       start_date,
       end_date,
@@ -26,6 +31,9 @@ export class ScoreMap {
       file,
       file_url,
       markings,
+      producer_id,
+      created_at,
+      updated_at,
     });
 
     return score;

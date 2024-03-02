@@ -48,13 +48,15 @@ export default class ScoresController {
   // }
 
   public async create(req: Request, res: Response): Promise<Response> {
-    const { quantity, weight, start_date, end_date } = req.body;
+    const { quantity, weight, start_date, end_date, producer_id, type } = req.body;
 
     const createScore = container.resolve(CreateScoreService);
 
     const score = await createScore.execute({
+      producer_id,
       quantity,
       weight,
+      type,
       start_date,
       end_date,
     });
@@ -64,7 +66,7 @@ export default class ScoresController {
 
   public async update(req: Request, res: Response): Promise<Response> {
     const { id } = req.query;
-    const { quantity, weight, start_date, end_date } = req.body;
+    const { quantity, weight, start_date, end_date, type } = req.body;
 
     const updateScore = container.resolve(UpdateScoreService);
 
@@ -72,6 +74,7 @@ export default class ScoresController {
       id: String(id),
       quantity,
       weight,
+      type,
       start_date,
       end_date,
     });

@@ -1,12 +1,13 @@
 import { injectable, inject } from 'tsyringe';
-import { uuid } from 'uuidv4';
 
 import IScoresRepository from '../repositories/IScoresRepository';
 import Score from '../infra/typeorm/entities/Score';
 
 interface IRequest {
+  producer_id?: string;
   quantity: number;
   weight: string;
+  type: string;
   start_date: Date;
   end_date: Date;
 }
@@ -19,15 +20,18 @@ class CreateScoreService {
   ) {}
 
   public async execute({
+    producer_id,
     quantity,
     weight,
+    type,
     start_date,
     end_date,
   }: IRequest): Promise<Score> {
     const score = await this.scoresRepository.create({
-      id: uuid(),
+      producer_id,
       quantity,
       weight,
+      type,
       start_date,
       end_date,
     });

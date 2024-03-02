@@ -1,5 +1,5 @@
 export default interface ICreateMarkingDTO {
-  id: string;
+  // id: string;
   quantity: number;
   weight: string;
   score_id: string;

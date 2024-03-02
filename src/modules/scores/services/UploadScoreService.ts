@@ -27,6 +27,17 @@ class UploadScoreService {
       throw new AppError('Score does not exists.');
     }
 
+    if (score.status === true) {
+      throw new AppError('Score status true');
+    }
+
+    if (Number(score.quantity) < 1) {
+      score.status = true;
+      await this.scoresRepository.save(score);
+
+      throw new AppError('Score quantity zero');
+    }
+
     const { _, token } = await fetch('http://167.71.20.221/sessions', {
       method: "POST",
       headers: {
@@ -64,7 +75,7 @@ class UploadScoreService {
           await this.storageProvider.delete(score.file, 'scores/file');
         }
 
-        await this.storageProvider.save(file, 'scores/file');
+        await this.storageProvider.saveMultiPart(file, 'scores/file');
 
         return response.json();
       }
@@ -73,7 +84,7 @@ class UploadScoreService {
         const text = await response.text()
         const { _, message } = JSON.parse(text);
 
-        return { statusCode: response.status, message  }
+        throw new AppError(message);
       }
 
       score.status = false;

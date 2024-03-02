@@ -2,7 +2,6 @@ import { injectable, inject } from 'tsyringe';
 
 import IMarkingsRepository from '../repositories/IMarkingsRepository';
 import Marking from '../infra/typeorm/entities/Marking';
-import { uuid } from 'uuidv4';
 
 interface IRequest {
   quantity: number;
@@ -25,7 +24,6 @@ class CreateMarkingService {
     sequence,
   }: IRequest): Promise<Marking> {
     const marking = await this.markingsRepository.create({
-      id: uuid(),
       quantity,
       weight,
       score_id,

@@ -22,6 +22,9 @@ class Score {
   weight: string;
 
   @Column()
+  type: string;
+
+  @Column()
   start_date: Date;
 
   @Column()
@@ -35,6 +38,9 @@ class Score {
   })
   @JoinTable()
   markings: Marking[];
+
+  @Column()
+  producer_id: string;
 
   @Column()
   file: string;

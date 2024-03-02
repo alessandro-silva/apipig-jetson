@@ -6,8 +6,10 @@ import Score from '../infra/typeorm/entities/Score';
 
 interface IRequest {
   id: string;
+  producer_id?: string;
   quantity?: number;
   weight?: string;
+  type?: string;
   start_date?: Date;
   end_date?: Date;
 }
@@ -21,8 +23,10 @@ class UpdateScoreService {
 
   public async execute({
     id,
+    producer_id,
     quantity,
     weight,
+    type,
     start_date,
     end_date,
   }: IRequest): Promise<Score> {
@@ -40,12 +44,20 @@ class UpdateScoreService {
       score.weight = weight;
     }
 
+    if (type) {
+      score.type = type;
+    }
+
     if (start_date) {
       score.start_date = start_date;
     }
 
     if (end_date) {
       score.end_date = end_date;
+    }
+
+    if (producer_id) {
+      score.producer_id = producer_id;
     }
 
     return this.scoresRepository.save(score);

@@ -6,7 +6,9 @@ import Score from '../infra/typeorm/entities/Score';
 
 interface IRequest {
   quantity: number;
+  producer_id?: string;
   weight: string;
+  type: string;
   start_date: Date;
   end_date: Date;
 }
@@ -20,14 +22,17 @@ class CreateScoreService {
 
   public async execute({
     quantity,
+    producer_id,
     weight,
+    type,
     start_date,
     end_date,
   }: IRequest): Promise<Score> {
     const score = await this.scoresRepository.create({
-      id: uuid(),
       quantity,
+      producer_id,
       weight,
+      type,
       start_date,
       end_date,
     });

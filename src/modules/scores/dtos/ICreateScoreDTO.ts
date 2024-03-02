@@ -1,7 +1,8 @@
 export default interface ICreateScoreDTO {
-  id: string;
+  producer_id?: string;
   quantity: number;
   weight: string;
+  type: string;
   start_date: Date;
   end_date: Date;
 }

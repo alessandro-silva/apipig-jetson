@@ -53,8 +53,6 @@ export default class MarkingsController {
   }
 
   public async createAll(req: Request, res: Response): Promise<Response> {
-    // const { quantity, weight, score_id } = req.body;
-
     const createAllMarking = container.resolve(CreateAllMarkingService);
 
     const markings = await createAllMarking.execute(req.body);
