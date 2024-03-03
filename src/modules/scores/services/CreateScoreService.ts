@@ -8,6 +8,7 @@ interface IRequest {
   quantity: number;
   weight: string;
   type: string;
+  nfe: string;
   start_date: Date;
   end_date: Date;
 }
@@ -24,6 +25,7 @@ class CreateScoreService {
     quantity,
     weight,
     type,
+    nfe,
     start_date,
     end_date,
   }: IRequest): Promise<Score> {
@@ -32,6 +34,7 @@ class CreateScoreService {
       quantity,
       weight,
       type,
+      nfe,
       start_date,
       end_date,
     });

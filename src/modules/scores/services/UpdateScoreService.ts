@@ -10,6 +10,7 @@ interface IRequest {
   quantity?: number;
   weight?: string;
   type?: string;
+  nfe?: string;
   start_date?: Date;
   end_date?: Date;
 }
@@ -27,6 +28,7 @@ class UpdateScoreService {
     quantity,
     weight,
     type,
+    nfe,
     start_date,
     end_date,
   }: IRequest): Promise<Score> {
@@ -58,6 +60,10 @@ class UpdateScoreService {
 
     if (producer_id) {
       score.producer_id = producer_id;
+    }
+
+    if (nfe) {
+      score.nfe = nfe;
     }
 
     return this.scoresRepository.save(score);

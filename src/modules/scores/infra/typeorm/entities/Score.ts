@@ -25,6 +25,9 @@ class Score {
   type: string;
 
   @Column()
+  nfe: string;
+
+  @Column()
   start_date: Date;
 
   @Column()

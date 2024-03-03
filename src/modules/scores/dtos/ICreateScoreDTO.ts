@@ -3,6 +3,7 @@ export default interface ICreateScoreDTO {
   quantity: number;
   weight: string;
   type: string;
+  nfe: string;
   start_date: Date;
   end_date: Date;
 }
