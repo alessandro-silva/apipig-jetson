@@ -14,6 +14,8 @@ import 'express-async-errors';
 import { errors } from 'celebrate';
 import { Server } from 'socket.io';
 import { spawn } from 'child_process';
+import { SerialPort } from 'serialport';
+import { ReadlineParser } from '@serialport/parser-readline';
 
 import uploadConfig from '@config/upload';
 import AppError from '@shared/errors/AppError';
@@ -32,6 +34,12 @@ let idCounting: any;
 // Não inserir URL de acesso prioritario
 // console.log('API CHEGOU NO CORS');
 // app.use(cors());
+
+//SERIAL PORT
+const port = new SerialPort({
+  path: '',
+  baudRate: 9600,
+});
 
 app.use(bodyParser.json({ limit: '50mb' }));
 
@@ -97,29 +105,38 @@ app.use((err: Error, req: Request, res: Response, _: NextFunction) => {
 });
 
 app.get('/spawn', async (req, res) => {
-  const { cfg, names, weights, saveVideo, roteViewVideo, mountVideo } = req.query;
+  const { cfg, names, weights, saveVideo, roteViewVideo, mountVideo } =
+    req.query;
   const data = {
     quantity: 0,
     weight: 0,
     start_date: new Date(),
-  }
+  };
   try {
-    const response = await fetch("http://localhost:3333/scores", {
-      method: "POST", // or 'PUT'
+    const response = await fetch('http://localhost:3333/scores', {
+      method: 'POST', // or 'PUT'
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     });
 
-    const dataFormated: { id: string } = await response.json()
+    const dataFormated: { id: string } = await response.json();
 
-    idCounting = dataFormated.id
+    idCounting = dataFormated.id;
 
     console.log('Rota /spawn foi acessada. Iniciando o programa C++...');
 
     // Iniciar o programa C++ como um processo separado
-    cppProcess = spawn('/home/rasp/project/darknet_test/main', [idCounting, cfg, names, weights, saveVideo, roteViewVideo, mountVideo]);
+    cppProcess = spawn('/home/rasp/project/darknet_test/main', [
+      idCounting,
+      cfg,
+      names,
+      weights,
+      saveVideo,
+      roteViewVideo,
+      mountVideo,
+    ]);
 
     cppProcess.stdout.on('data', (data: any) => {
       console.log(`Saída do programa C++: ${data}`);
@@ -148,10 +165,11 @@ app.get('/spawn', async (req, res) => {
 
     res.status(200).json({ message: 'Programa C++ iniciado' });
   } catch (e) {
-    res.status(500).json({ message: `Problemas ao executar programa. ERROR: ${e}` });
+    res
+      .status(500)
+      .json({ message: `Problemas ao executar programa. ERROR: ${e}` });
   }
 });
-
 
 //STREAM 2
 
@@ -197,11 +215,25 @@ app.get('/videos', (req, res) => {
   const videos = fs.readdirSync('videos');
 
   const videosMap = videos.map(video => {
-    return `${__dirname}${'/'}videos${'/'}${video}`
+    return `${__dirname}${'/'}videos${'/'}${video}`;
     // return `C:/Users/bruno.carvalho/MidasCorp/WebServices-server${'/'}videos${'/'}${video}`
-  })
+  });
 
-  res.json(videosMap)
+  res.json(videosMap);
+});
+
+app.get('/scale', (req, res) => {
+  const parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }));
+
+
+  parser.on('data', handleSendData);
+
+  function handleSendData(scale: string) {
+    res.status(200).json({
+      scale: scale,
+    });
+    parser.pause();
+  }
 });
 
 // WebSocket
@@ -215,13 +247,15 @@ wss.on('connection', function connection(ws) {
     // Tratamento das mensagens recebidas
     if (msgString === 'roudProgram') {
       // Se a mensagem for 'roudProgram', não será mais necessário iniciar o programa aqui
-      console.log('Agora a inicialização do programa é realizada pela rota /spawn');
+      console.log(
+        'Agora a inicialização do programa é realizada pela rota /spawn',
+      );
     }
 
     // Broadcast da mensagem recebida para todos os clientes conectados
     wss.clients.forEach(function each(client) {
       if (client !== ws && client.readyState === WebSocket.OPEN && idCounting) {
-        const formatedData = `${msgString} ${idCounting}`
+        const formatedData = `${msgString} ${idCounting}`;
         client.send(formatedData);
       }
     });
@@ -247,15 +281,12 @@ app.post('/terminateProgram', (req, res) => {
   res.status(200).json({ message: 'Programa C++ encerrado' });
 });
 
-
 const terminateCppProgram = () => {
   // var proc = require('child_process').spawn('mongod');
   cppProcess.kill('SIGINT');
 
   wss.clients.forEach(function each(client) {
-
     client.send('program_finalized');
-
   });
 };
 
@@ -264,19 +295,19 @@ app.delete('/videos/:videoName', (req, res) => {
   // const videoPath = path.join('/videos', videoName); // Caminho completo para o vídeo
   const videoPath = path.resolve(__dirname, '..', '..', '..', '..', 'videos');
 
-  fs.unlink(videoPath, async (err) => {
+  fs.unlink(videoPath, async err => {
     const filename = path.resolve(videoPath, videoName);
     console.log('filename', filename);
 
     try {
       await fs.promises.stat(filename);
     } catch {
-      return res.json({ message: 'Video not deleted.' })
+      return res.json({ message: 'Video not deleted.' });
     }
 
     await fs.promises.unlink(filename);
 
-    return res.json({ message: 'Video deleted.' })
+    return res.json({ message: 'Video deleted.' });
     // if (err) {
     //   console.error('Erro ao excluir o vídeo:', err);
     //   res.status(500).json({ error: 'Erro ao excluir o vídeo' });
@@ -293,11 +324,10 @@ app.get('/videos/:videoName', (req, res) => {
   const videoName = req.params.videoName;
   const videoPath = path.resolve(__dirname, '..', '..', '..', '..', 'videos');
 
-
-  console.log('VIDEO', videoName)
+  console.log('VIDEO', videoName);
   const video = path.join(videoPath, videoName); // Caminho completo para o vídeo
 
-  res.download(video, (err) => {
+  res.download(video, err => {
     if (err) {
       console.error('Erro ao baixar o vídeo:', err);
       res.status(500).json({ error: 'Erro ao baixar o vídeo' });
@@ -306,6 +336,5 @@ app.get('/videos/:videoName', (req, res) => {
     }
   });
 });
-
 
 export { serverHttp, io };

@@ -1,4 +1,4 @@
-import { getRepository, Repository } from 'typeorm';
+import { DeleteResult, getRepository, Repository } from 'typeorm';
 
 import IScoresRepository from '@modules/scores/repositories/IScoresRepository';
 import ICreateScoreDTO from '@modules/scores/dtos/ICreateScoreDTO';
@@ -44,6 +44,10 @@ class ScoresRepository implements IScoresRepository {
 
   public async save(score: Score): Promise<Score> {
     return this.ormRepository.save(score);
+  }
+
+  public async delete(id: string): Promise<DeleteResult> {
+    return this.ormRepository.delete({ id });
   }
 }
 

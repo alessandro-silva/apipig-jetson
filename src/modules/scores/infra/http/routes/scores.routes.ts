@@ -29,4 +29,6 @@ scoresRouter.patch(
   scoresController.uploadFile,
 );
 
+scoresRouter.delete('/', scoresController.delete);
+
 export default scoresRouter;
