@@ -49,7 +49,7 @@ export default class ScoresController {
   // }
 
   public async create(req: Request, res: Response): Promise<Response> {
-    const { quantity, weight, start_date, end_date, producer_id, type, nfe } = req.body;
+    const { quantity, weight, start_date, end_date, producer_id, type, nfe, farm_id } = req.body;
 
     const createScore = container.resolve(CreateScoreService);
 
@@ -61,6 +61,7 @@ export default class ScoresController {
       nfe,
       start_date,
       end_date,
+      farm_id,
     });
 
     return res.json(score);
@@ -68,7 +69,7 @@ export default class ScoresController {
 
   public async update(req: Request, res: Response): Promise<Response> {
     const { id } = req.query;
-    const { quantity, weight, start_date, end_date, type, nfe } = req.body;
+    const { quantity, weight, start_date, end_date, type, nfe, farm_id } = req.body;
 
     const updateScore = container.resolve(UpdateScoreService);
 
@@ -80,6 +81,7 @@ export default class ScoresController {
       nfe,
       start_date,
       end_date,
+      farm_id,
     });
 
     return res.json(score);
@@ -88,13 +90,13 @@ export default class ScoresController {
   public async uploadFile(req: Request, res: Response): Promise<Response> {
     const { id } = req.query;
 
-    const file = req.file?.filename;
+    // const file = req.file?.filename;
 
     const uploadScore = container.resolve(UploadScoreService);
 
     const score = await uploadScore.execute({
       id: String(id),
-      file: file ? file : '',
+      // file: file ? file : '',
     });
 
     return res.json(score);

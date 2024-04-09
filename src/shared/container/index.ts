@@ -8,8 +8,8 @@ import ScoresRepository from '@modules/scores/infra/typeorm/repositories/ScoresR
 import IMarkingsRepository from '@modules/markings/repositories/IMarkingsRepository';
 import MarkingsRepository from '@modules/markings/infra/typeorm/repositories/MarkingsRepository';
 
-import IProducersRepository from '@modules/producers/repositories/IProducersRepository';
-import ProducersRepository from '@modules/producers/infra/typeorm/repositories/ProducersRepository';
+// import IProducersRepository from '@modules/producers/repositories/IProducersRepository';
+// import ProducersRepository from '@modules/producers/infra/typeorm/repositories/ProducersRepository';
 
 container.registerSingleton<IScoresRepository>(
   'ScoresRepository',
@@ -21,7 +21,7 @@ container.registerSingleton<IMarkingsRepository>(
   MarkingsRepository,
 );
 
-container.registerSingleton<IProducersRepository>(
-  'ProducersRepository',
-  ProducersRepository,
-);
+// container.registerSingleton<IProducersRepository>(
+//   'ProducersRepository',
+//   ProducersRepository,
+// );

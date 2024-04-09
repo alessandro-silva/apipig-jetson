@@ -1,19 +1,14 @@
-import { Router } from 'express';
+// import { Router } from 'express';
 
-// import ensureAuthenticated from '../middlewares/ensureAuthenticated';
-import ProducersController from '../controllers/ProducersController';
+// // import ensureAuthenticated from '../middlewares/ensureAuthenticated';
+// import ProducersController from '../controllers/ProducersController';
 
-const producersController = new ProducersController();
-const producersRouter = Router();
+// const producersController = new ProducersController();
+// const producersRouter = Router();
 
-// producersRouter.use(ensureAuthenticated);
+// // producersRouter.use(ensureAuthenticated);
 
-producersRouter.get('/', producersController.index);
+// producersRouter.get('/', producersController.index);
+// producersRouter.post('/', producersController.create);
 
-// producersRouter.get('/show', producersController.show);
-
-producersRouter.post('/', producersController.create);
-
-// producersRouter.put('/', producersController.update);
-
-export default producersRouter;
+// export default producersRouter;

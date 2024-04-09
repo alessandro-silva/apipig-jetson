@@ -7,5 +7,6 @@ export default interface IScoreResponseDTO {
   start_date: Date;
   end_date: Date;
   status: boolean;
+  farm_id?: string;
   file_url(): string;
 }

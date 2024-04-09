@@ -20,6 +20,7 @@ export class ScoreMap {
     producer_id,
     created_at,
     updated_at,
+    farm_id,
   }: Score): IScoreResponseDTO {
     const score = classToClass({
       id,
@@ -36,6 +37,7 @@ export class ScoreMap {
       producer_id,
       created_at,
       updated_at,
+      farm_id,
     });
 
     return score;

@@ -11,6 +11,7 @@ interface IRequest {
   nfe: string;
   start_date: Date;
   end_date: Date;
+  farm_id: string;
 }
 
 @injectable()
@@ -28,6 +29,7 @@ class CreateScoreService {
     nfe,
     start_date,
     end_date,
+    farm_id,
   }: IRequest): Promise<Score> {
     const score = await this.scoresRepository.create({
       producer_id,
@@ -37,6 +39,7 @@ class CreateScoreService {
       nfe,
       start_date,
       end_date,
+      farm_id,
     });
 
     return score;

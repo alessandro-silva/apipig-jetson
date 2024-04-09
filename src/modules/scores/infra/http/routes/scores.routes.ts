@@ -10,25 +10,14 @@ const scoresRouter = Router();
 const upload = multer(uploadConfig);
 
 scoresRouter.get('/', scoresController.index);
-
 scoresRouter.get('/show', scoresController.show);
-
 scoresRouter.post('/', scoresController.create);
-
-// scoresRouter.post(
-//   '/import',
-//   upload.single('file'),
-//   scoresController.import,
-// );
-
 scoresRouter.put('/', scoresController.update);
-
 scoresRouter.patch(
   '/upload',
-  upload.single('file'),
+  // upload.single('file'),
   scoresController.uploadFile,
 );
-
 scoresRouter.delete('/', scoresController.delete);
 
 export default scoresRouter;

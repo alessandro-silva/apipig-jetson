@@ -7,7 +7,7 @@ import IScoresRepository from '../repositories/IScoresRepository';
 
 interface IRequest {
   id: string;
-  file: string;
+  // file: string;
 }
 
 @injectable()
@@ -20,7 +20,7 @@ class UploadScoreService {
     private storageProvider: IStorageProvider,
   ) { }
 
-  public async execute({ file, id }: IRequest): Promise<any> {
+  public async execute({ id }: IRequest): Promise<any> {
     const score = await this.scoresRepository.findById(id);
 
     if (!score) {
@@ -57,7 +57,7 @@ class UploadScoreService {
       throw new AppError(err.message);
     });
 
-    score.file = file;
+    // score.file = file;
     score.status = true;
 
     const scoreWithRelation = await this.scoresRepository.save(score);
@@ -70,27 +70,27 @@ class UploadScoreService {
       },
       body: JSON.stringify(scoreWithRelation),
     }).then(async (response) => {
-      if (response.status === 200) {
-        if (score.file) {
-          await this.storageProvider.delete(score.file, 'scores/file');
-        }
+      // if (response.status === 200) {
+      //   if (score.file) {
+      //     await this.storageProvider.delete(score.file, 'scores/file');
+      //   }
 
-        await this.storageProvider.saveMultiPart(file, 'scores/file');
+      //   await this.storageProvider.saveMultiPart(file, 'scores/file');
 
-        return response.json();
-      }
+      //   return response.json();
+      // }
 
-      if (response.status === 400) {
-        const text = await response.text()
-        const { _, message } = JSON.parse(text);
+      // if (response.status === 400) {
+      //   const text = await response.text()
+      //   const { _, message } = JSON.parse(text);
 
-        throw new AppError(message);
-      }
+      //   throw new AppError(message);
+      // }
 
-      score.status = false;
-      await this.scoresRepository.save(score);
+      // score.status = false;
+      // await this.scoresRepository.save(score);
 
-      throw new AppError('Score status false.');
+      // throw new AppError('Score status false.');
     }).catch(async (err) => {
       score.status = false;
       await this.scoresRepository.save(score);

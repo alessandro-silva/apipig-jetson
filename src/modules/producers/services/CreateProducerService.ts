@@ -1,34 +1,34 @@
-import { injectable, inject } from 'tsyringe';
+// import { injectable, inject } from 'tsyringe';
 
-import IProducersRepository from '../repositories/IProducersRepository';
-import Producer from '../infra/typeorm/entities/Producer';
+// import IProducersRepository from '../repositories/IProducersRepository';
+// import Producer from '../infra/typeorm/entities/Producer';
 
-interface IRequest {
-  name: string;
-  cpf: string;
-  internal_code: string;
-}
+// interface IRequest {
+//   name: string;
+//   cpf: string;
+//   internal_code: string;
+// }
 
-@injectable()
-class CreateProducerService {
-  constructor(
-    @inject('ProducersRepository')
-    private producersRepository: IProducersRepository,
-  ) { }
+// @injectable()
+// class CreateProducerService {
+//   constructor(
+//     @inject('ProducersRepository')
+//     private producersRepository: IProducersRepository,
+//   ) { }
 
-  public async execute({
-    name,
-    cpf,
-    internal_code,
-  }: IRequest): Promise<Producer> {
-    const producer = await this.producersRepository.create({
-      name,
-      cpf,
-      internal_code,
-    });
+//   public async execute({
+//     name,
+//     cpf,
+//     internal_code,
+//   }: IRequest): Promise<Producer> {
+//     const producer = await this.producersRepository.create({
+//       name,
+//       cpf,
+//       internal_code,
+//     });
 
-    return producer;
-  }
-}
+//     return producer;
+//   }
+// }
 
-export default CreateProducerService;
+// export default CreateProducerService;

@@ -1,5 +1,5 @@
-import Marking from '@modules/markings/infra/typeorm/entities/Marking';
 import { Expose } from 'class-transformer';
+
 import {
   Column,
   CreateDateColumn,
@@ -9,6 +9,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import Marking from '@modules/markings/infra/typeorm/entities/Marking';
 
 @Entity('scores')
 class Score {
@@ -35,6 +37,9 @@ class Score {
 
   @Column()
   status: boolean;
+
+  @Column()
+  farm_id: string;
 
   @OneToMany(() => Marking, marking => marking.score, {
     eager: true,

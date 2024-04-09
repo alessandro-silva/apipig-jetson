@@ -4,6 +4,7 @@ export default interface ICreateScoreDTO {
   weight: string;
   type: string;
   nfe: string;
+  farm_id: string;
   start_date: Date;
   end_date: Date;
 }

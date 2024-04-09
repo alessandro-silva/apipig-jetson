@@ -26,7 +26,7 @@ class Marking {
   @Column()
   score_id: string;
 
-  @ManyToOne(() => Score, goal => goal.markings)
+  @ManyToOne(() => Score, score => score.markings)
   @JoinColumn({ name: 'score_id' })
   score: Score;
 

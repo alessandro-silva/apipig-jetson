@@ -13,6 +13,7 @@ interface IRequest {
   nfe?: string;
   start_date?: Date;
   end_date?: Date;
+  farm_id?: string;
 }
 
 @injectable()
@@ -31,6 +32,7 @@ class UpdateScoreService {
     nfe,
     start_date,
     end_date,
+    farm_id,
   }: IRequest): Promise<Score> {
     const score = await this.scoresRepository.findById(id);
 
@@ -64,6 +66,10 @@ class UpdateScoreService {
 
     if (nfe) {
       score.nfe = nfe;
+    }
+
+    if (farm_id) {
+      score.farm_id = farm_id;
     }
 
     return this.scoresRepository.save(score);
