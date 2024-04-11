@@ -37,7 +37,7 @@ let idCounting: any;
 
 //SERIAL PORT
 const port = new SerialPort({
-  path: '',
+  path: '/dev/ttyUSB0',
   baudRate: 9600,
 });
 
@@ -105,13 +105,27 @@ app.use((err: Error, req: Request, res: Response, _: NextFunction) => {
 });
 
 app.get('/spawn', async (req, res) => {
-  const { cfg, names, weights, saveVideo, roteViewVideo, mountVideo } =
-    req.query;
+  const {
+    cfg,
+    names,
+    weights,
+    saveVideo,
+    roteViewVideo,
+    mountVideo,
+    type,
+    producer_id,
+    nfe,
+  } = req.query;
+
   const data = {
     quantity: 0,
     weight: 0,
     start_date: new Date(),
+    type: type,
+    producer_id,
+    nfe,
   };
+
   try {
     const response = await fetch('http://localhost:3333/scores', {
       method: 'POST', // or 'PUT'
@@ -125,10 +139,11 @@ app.get('/spawn', async (req, res) => {
 
     idCounting = dataFormated.id;
 
+
     console.log('Rota /spawn foi acessada. Iniciando o programa C++...');
 
     // Iniciar o programa C++ como um processo separado
-    cppProcess = spawn('/home/rasp/project/darknet_test/main', [
+    cppProcess = spawn('/home/jet/projects/darknet_test/main', [
       idCounting,
       cfg,
       names,
@@ -165,12 +180,12 @@ app.get('/spawn', async (req, res) => {
 
     res.status(200).json({ message: 'Programa C++ iniciado' });
   } catch (e) {
+    console.log(e)
     res
       .status(500)
       .json({ message: `Problemas ao executar programa. ERROR: ${e}` });
   }
 });
-
 //STREAM 2
 
 app.get('/video', (req, res) => {
