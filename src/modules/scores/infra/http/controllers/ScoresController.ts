@@ -49,19 +49,36 @@ export default class ScoresController {
   // }
 
   public async create(req: Request, res: Response): Promise<Response> {
-    const { quantity, weight, start_date, end_date, producer_id, type, nfe, farm_id } = req.body;
+    const {
+      quantity,
+      weight,
+      start_date,
+      end_date,
+      type,
+      nfe,
+      farm_id_internal,
+      producer_id_internal,
+      farm_id_received,
+      producer_id_received,
+      farm_id_sender,
+      producer_id_sender,
+    } = req.body;
 
     const createScore = container.resolve(CreateScoreService);
 
     const score = await createScore.execute({
-      producer_id,
       quantity,
       weight,
       type,
       nfe,
       start_date,
       end_date,
-      farm_id,
+      farm_id_internal,
+      producer_id_internal,
+      farm_id_received,
+      producer_id_received,
+      farm_id_sender,
+      producer_id_sender,
     });
 
     return res.json(score);
@@ -69,7 +86,20 @@ export default class ScoresController {
 
   public async update(req: Request, res: Response): Promise<Response> {
     const { id } = req.query;
-    const { quantity, weight, start_date, end_date, type, nfe, farm_id } = req.body;
+    const {
+      quantity,
+      weight,
+      start_date,
+      end_date,
+      type,
+      nfe,
+      farm_id_internal,
+      producer_id_internal,
+      farm_id_received,
+      producer_id_received,
+      farm_id_sender,
+      producer_id_sender,
+    } = req.body;
 
     const updateScore = container.resolve(UpdateScoreService);
 
@@ -81,7 +111,12 @@ export default class ScoresController {
       nfe,
       start_date,
       end_date,
-      farm_id,
+      farm_id_internal,
+      producer_id_internal,
+      farm_id_received,
+      producer_id_received,
+      farm_id_sender,
+      producer_id_sender,
     });
 
     return res.json(score);

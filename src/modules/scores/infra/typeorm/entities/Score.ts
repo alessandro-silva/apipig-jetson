@@ -38,9 +38,6 @@ class Score {
   @Column()
   status: boolean;
 
-  @Column()
-  farm_id: string;
-
   @OneToMany(() => Marking, marking => marking.score, {
     eager: true,
   })
@@ -48,7 +45,22 @@ class Score {
   markings: Marking[];
 
   @Column()
-  producer_id: string;
+  producer_id_sender: string;
+
+  @Column()
+  farm_id_sender: string;
+
+  @Column()
+  producer_id_received: string;
+
+  @Column()
+  farm_id_received: string;
+
+  @Column()
+  producer_id_internal: string;
+
+  @Column()
+  farm_id_internal: string;
 
   @Column()
   file: string;

@@ -1,5 +1,4 @@
 export default interface IScoreResponseDTO {
-  producer_id: string;
   quantity: number;
   weight: string;
   type: string;
@@ -7,6 +6,11 @@ export default interface IScoreResponseDTO {
   start_date: Date;
   end_date: Date;
   status: boolean;
-  farm_id?: string;
   file_url(): string;
+  producer_id_sender: string;
+  farm_id_sender: string;
+  producer_id_received: string;
+  farm_id_received: string;
+  producer_id_internal: string;
+  farm_id_internal: string;
 }

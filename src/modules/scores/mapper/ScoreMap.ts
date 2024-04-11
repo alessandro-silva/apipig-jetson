@@ -17,10 +17,14 @@ export class ScoreMap {
     file,
     file_url,
     markings,
-    producer_id,
     created_at,
     updated_at,
-    farm_id,
+    farm_id_internal,
+    producer_id_internal,
+    farm_id_received,
+    producer_id_received,
+    farm_id_sender,
+    producer_id_sender,
   }: Score): IScoreResponseDTO {
     const score = classToClass({
       id,
@@ -34,10 +38,14 @@ export class ScoreMap {
       file,
       file_url,
       markings,
-      producer_id,
       created_at,
       updated_at,
-      farm_id,
+      farm_id_internal,
+      producer_id_internal,
+      farm_id_received,
+      producer_id_received,
+      farm_id_sender,
+      producer_id_sender,
     });
 
     return score;

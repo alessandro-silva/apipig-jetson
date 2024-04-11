@@ -6,14 +6,18 @@ import Score from '../infra/typeorm/entities/Score';
 
 interface IRequest {
   id: string;
-  producer_id?: string;
   quantity?: number;
   weight?: string;
   type?: string;
   nfe?: string;
   start_date?: Date;
   end_date?: Date;
-  farm_id?: string;
+  producer_id_sender?: string;
+  farm_id_sender?: string;
+  producer_id_received?: string;
+  farm_id_received?: string;
+  producer_id_internal?: string;
+  farm_id_internal?: string;
 }
 
 @injectable()
@@ -25,14 +29,18 @@ class UpdateScoreService {
 
   public async execute({
     id,
-    producer_id,
     quantity,
     weight,
     type,
     nfe,
     start_date,
     end_date,
-    farm_id,
+    farm_id_internal,
+    producer_id_internal,
+    farm_id_received,
+    producer_id_received,
+    farm_id_sender,
+    producer_id_sender,
   }: IRequest): Promise<Score> {
     const score = await this.scoresRepository.findById(id);
 
@@ -60,16 +68,32 @@ class UpdateScoreService {
       score.end_date = end_date;
     }
 
-    if (producer_id) {
-      score.producer_id = producer_id;
-    }
-
     if (nfe) {
       score.nfe = nfe;
     }
 
-    if (farm_id) {
-      score.farm_id = farm_id;
+    if (farm_id_internal) {
+      score.farm_id_internal = farm_id_internal;
+    }
+
+    if (producer_id_internal) {
+      score.producer_id_internal = producer_id_internal;
+    }
+
+    if (farm_id_received) {
+      score.farm_id_received = farm_id_received;
+    }
+
+    if (producer_id_received) {
+      score.producer_id_received = producer_id_received;
+    }
+
+    if (farm_id_sender) {
+      score.farm_id_sender = farm_id_sender;
+    }
+
+    if (producer_id_sender) {
+      score.producer_id_sender = producer_id_sender;
     }
 
     return this.scoresRepository.save(score);

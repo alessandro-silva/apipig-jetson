@@ -4,14 +4,18 @@ import IScoresRepository from '../repositories/IScoresRepository';
 import Score from '../infra/typeorm/entities/Score';
 
 interface IRequest {
-  producer_id?: string;
   quantity: number;
   weight: string;
   type: string;
   nfe: string;
   start_date: Date;
   end_date: Date;
-  farm_id: string;
+  producer_id_sender?: string;
+  farm_id_sender?: string;
+  producer_id_received?: string;
+  farm_id_received?: string;
+  producer_id_internal?: string;
+  farm_id_internal?: string;
 }
 
 @injectable()
@@ -19,27 +23,35 @@ class CreateScoreService {
   constructor(
     @inject('ScoresRepository')
     private scoresRepository: IScoresRepository,
-  ) {}
+  ) { }
 
   public async execute({
-    producer_id,
     quantity,
     weight,
     type,
     nfe,
     start_date,
     end_date,
-    farm_id,
+    farm_id_internal,
+    producer_id_internal,
+    farm_id_received,
+    producer_id_received,
+    farm_id_sender,
+    producer_id_sender,
   }: IRequest): Promise<Score> {
     const score = await this.scoresRepository.create({
-      producer_id,
       quantity,
       weight,
       type,
       nfe,
       start_date,
       end_date,
-      farm_id,
+      farm_id_internal,
+      producer_id_internal,
+      farm_id_received,
+      producer_id_received,
+      farm_id_sender,
+      producer_id_sender,
     });
 
     return score;
