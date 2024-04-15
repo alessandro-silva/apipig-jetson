@@ -30,6 +30,12 @@ class Score {
   nfe: string;
 
   @Column()
+  name: string;
+
+  @Column()
+  lote: string;
+
+  @Column()
   start_date: Date;
 
   @Column()

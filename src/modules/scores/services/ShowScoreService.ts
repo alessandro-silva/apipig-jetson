@@ -3,7 +3,6 @@ import { differenceInMinutes, minutesToHours } from 'date-fns';
 
 import IScoresRepository from '../repositories/IScoresRepository';
 import AppError from '@shared/errors/AppError';
-import { ScoreMap } from '../mapper/ScoreMap';
 
 @injectable()
 class ShowScoreService {
@@ -24,9 +23,7 @@ class ShowScoreService {
     const hours = Math.floor(duration / 60);
     const minutes = duration % 60;
 
-    const scoreMap = ScoreMap.toDTO(score);
-
-    return {...scoreMap, duration: { hours,minutes } };
+    return {...score, duration: { hours,minutes } };
   }
 }
 

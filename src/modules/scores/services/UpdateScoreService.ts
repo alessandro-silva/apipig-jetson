@@ -18,6 +18,8 @@ interface IRequest {
   farm_id_received?: string;
   producer_id_internal?: string;
   farm_id_internal?: string;
+  name?: string;
+  lote?: string;
 }
 
 @injectable()
@@ -41,6 +43,8 @@ class UpdateScoreService {
     producer_id_received,
     farm_id_sender,
     producer_id_sender,
+    name,
+    lote,
   }: IRequest): Promise<Score> {
     const score = await this.scoresRepository.findById(id);
 
@@ -94,6 +98,14 @@ class UpdateScoreService {
 
     if (producer_id_sender) {
       score.producer_id_sender = producer_id_sender;
+    }
+
+    if (name) {
+      score.name = name;
+    }
+
+    if (lote) {
+      score.lote = lote;
     }
 
     return this.scoresRepository.save(score);

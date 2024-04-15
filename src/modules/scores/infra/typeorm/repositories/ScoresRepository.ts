@@ -2,7 +2,6 @@ import { DeleteResult, getRepository, Repository } from 'typeorm';
 
 import IScoresRepository from '@modules/scores/repositories/IScoresRepository';
 import ICreateScoreDTO from '@modules/scores/dtos/ICreateScoreDTO';
-
 import Score from '@modules/scores/infra/typeorm/entities/Score';
 
 class ScoresRepository implements IScoresRepository {

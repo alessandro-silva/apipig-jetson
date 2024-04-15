@@ -16,6 +16,8 @@ interface IRequest {
   farm_id_received?: string;
   producer_id_internal?: string;
   farm_id_internal?: string;
+  name?: string;
+  lote?: string;
 }
 
 
@@ -39,6 +41,8 @@ class CreateScoreService {
     producer_id_received,
     farm_id_sender,
     producer_id_sender,
+    name,
+    lote,
   }: IRequest): Promise<Score> {
     const score = await this.scoresRepository.create({
       quantity,
@@ -53,6 +57,8 @@ class CreateScoreService {
       producer_id_received,
       farm_id_sender,
       producer_id_sender,
+      name,
+      lote,
     });
 
     return score;

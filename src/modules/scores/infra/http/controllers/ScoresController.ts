@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
-// import { classToClass } from 'class-transformer';
 
 import ListScoreService from '@modules/scores/services/ListScoreService';
 import ShowScoreService from '@modules/scores/services/ShowScoreService';
@@ -28,26 +27,6 @@ export default class ScoresController {
     return res.json(score);
   }
 
-  // public async show(req: Request, res: Response): Promise<Response> {
-  //   const { quantity } = req.params;
-
-  //   const showWarning = container.resolve(ShowWarningService);
-
-  //   const employee = await showWarning.execute({
-  //     quantity: Number(quantity),
-  //   });
-
-  //   return res.json(employee);
-  // }
-
-  // public async import(req: Request, res: Response): Promise<Response> {
-  //   const importWarning = container.resolve(ImportWarningService);
-
-  //   const warnings = await importWarning.execute(req.file.path);
-
-  //   return res.json(warnings);
-  // }
-
   public async create(req: Request, res: Response): Promise<Response> {
     const {
       quantity,
@@ -56,6 +35,8 @@ export default class ScoresController {
       end_date,
       type,
       nfe,
+      name,
+      lote,
       farm_id_internal,
       producer_id_internal,
       farm_id_received,
@@ -71,6 +52,8 @@ export default class ScoresController {
       weight,
       type,
       nfe,
+      name,
+      lote,
       start_date,
       end_date,
       farm_id_internal,
@@ -93,6 +76,8 @@ export default class ScoresController {
       end_date,
       type,
       nfe,
+      name,
+      lote,
       farm_id_internal,
       producer_id_internal,
       farm_id_received,
@@ -109,6 +94,8 @@ export default class ScoresController {
       weight,
       type,
       nfe,
+      name,
+      lote,
       start_date,
       end_date,
       farm_id_internal,
@@ -125,13 +112,10 @@ export default class ScoresController {
   public async uploadFile(req: Request, res: Response): Promise<Response> {
     const { id } = req.query;
 
-    // const file = req.file?.filename;
-
     const uploadScore = container.resolve(UploadScoreService);
 
     const score = await uploadScore.execute({
       id: String(id),
-      // file: file ? file : '',
     });
 
     return res.json(score);

@@ -3,6 +3,8 @@ export default interface ICreateScoreDTO {
   weight: string;
   type: string;
   nfe: string;
+  name?: string;
+  lote?: string;
   start_date: Date;
   end_date: Date;
   producer_id_sender?: string;

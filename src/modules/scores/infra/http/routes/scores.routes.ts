@@ -13,11 +13,7 @@ scoresRouter.get('/', scoresController.index);
 scoresRouter.get('/show', scoresController.show);
 scoresRouter.post('/', scoresController.create);
 scoresRouter.put('/', scoresController.update);
-scoresRouter.patch(
-  '/upload',
-  // upload.single('file'),
-  scoresController.uploadFile,
-);
+scoresRouter.patch('/upload', scoresController.uploadFile);
 scoresRouter.delete('/', scoresController.delete);
 
 export default scoresRouter;
