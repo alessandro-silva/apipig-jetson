@@ -120,7 +120,7 @@ app.get('/spawn', async (req, res) => {
     producer_id_sender,
     farm_id_sender,
     producer_id_received,
-    farm_received,
+    farm_id_received,
   } = req.query;
 
   const data = {
@@ -135,7 +135,7 @@ app.get('/spawn', async (req, res) => {
     producer_id_sender,
     farm_id_sender,
     producer_id_received,
-    farm_received,
+    farm_id_received,
   };
 
   try {
