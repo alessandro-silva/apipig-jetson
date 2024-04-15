@@ -112,18 +112,30 @@ app.get('/spawn', async (req, res) => {
     saveVideo,
     roteViewVideo,
     mountVideo,
+    producer_id_internal,
+    farm_id_internal,
     type,
-    producer_id,
-    nfe,
+    lote,
+    name,
+    producer_id_sender,
+    farm_id_sender,
+    producer_id_received,
+    farm_received,
   } = req.query;
 
   const data = {
     quantity: 0,
     weight: 0,
     start_date: new Date(),
-    type: type,
-    producer_id,
-    nfe,
+    producer_id_internal,
+    farm_id_internal,
+    type,
+    lote,
+    name,
+    producer_id_sender,
+    farm_id_sender,
+    producer_id_received,
+    farm_received,
   };
 
   try {
