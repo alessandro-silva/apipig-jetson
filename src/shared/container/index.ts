@@ -1,6 +1,6 @@
 import { container } from 'tsyringe';
 
-import './providers';
+// import './providers';
 
 import IScoresRepository from '@modules/scores/repositories/IScoresRepository';
 import ScoresRepository from '@modules/scores/infra/typeorm/repositories/ScoresRepository';
