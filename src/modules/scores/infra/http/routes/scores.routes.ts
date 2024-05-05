@@ -12,6 +12,7 @@ const upload = multer(uploadConfig);
 scoresRouter.get('/', scoresController.index);
 scoresRouter.get('/show', scoresController.show);
 scoresRouter.post('/', scoresController.create);
+scoresRouter.post('/uploadAll', scoresController.uploadAll);
 scoresRouter.put('/', scoresController.update);
 scoresRouter.patch('/upload', scoresController.uploadFile);
 scoresRouter.delete('/', scoresController.delete);

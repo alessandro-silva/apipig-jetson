@@ -13,7 +13,7 @@ import WebSocket from 'ws';
 import 'express-async-errors';
 import { errors } from 'celebrate';
 import { Server } from 'socket.io';
-import { spawn } from 'child_process';
+import { spawn, execSync } from 'child_process';
 import { SerialPort } from 'serialport';
 import { ReadlineParser } from '@serialport/parser-readline';
 
@@ -30,16 +30,22 @@ const app = express();
 
 let cppProcess: any;
 let idCounting: any;
+let port: any
 
 // Não inserir URL de acesso prioritario
 // console.log('API CHEGOU NO CORS');
 // app.use(cors());
 
 //SERIAL PORT
-const port = new SerialPort({
-  path: '/dev/ttyUSB0',
-  baudRate: 9600,
-});
+try {
+  port = new SerialPort({
+    path: '/dev/ttyUSB0',
+    baudRate: 9600,
+  });
+
+} catch (err) {
+ console.log('Eror', err)
+}
 
 app.use(bodyParser.json({ limit: '50mb' }));
 
@@ -104,6 +110,18 @@ app.use((err: Error, req: Request, res: Response, _: NextFunction) => {
   });
 });
 
+app.get('/shutdown', async (req, res) => {
+  execSync("shutdown -h now")
+});
+
+app.get('/activitie', async (req, res) => {
+  return res.status(200).json({
+    status: 'success',
+    message: 'Equipamento ativo',
+  });
+});
+
+
 app.get('/spawn', async (req, res) => {
   const {
     cfg,
@@ -112,46 +130,38 @@ app.get('/spawn', async (req, res) => {
     saveVideo,
     roteViewVideo,
     mountVideo,
-    producer_id_internal,
-    farm_id_internal,
-    type,
-    lote,
-    name,
-    producer_id_sender,
-    farm_id_sender,
-    producer_id_received,
-    farm_id_received,
+    idScores,
   } = req.query;
 
-  const data = {
-    quantity: 0,
-    weight: 0,
-    start_date: new Date(),
-    producer_id_internal,
-    farm_id_internal,
-    type,
-    lote,
-    name,
-    producer_id_sender,
-    farm_id_sender,
-    producer_id_received,
-    farm_id_received,
-  };
+  // const data = {
+  //   quantity: 0,
+  //   weight: 0,
+  //   start_date: new Date(),
+  //   producer_id_internal,
+  //   farm_id_internal,
+  //   type,
+  //   lote,
+  //   name,
+  //   producer_id_sender,
+  //   farm_id_sender,
+  //   producer_id_received,
+  //   farm_id_received,
+  // };
 
   try {
-    const response = await fetch('http://localhost:3333/scores', {
-      method: 'POST', // or 'PUT'
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+  //   const response = await fetch('http://localhost:3333/scores', {
+  //     method: 'POST', // or 'PUT'
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(data),
+  //   });
 
-    const dataFormated: { id: string } = await response.json();
+  //   const dataFormated: { id: string } = await response.json();
 
-    idCounting = dataFormated.id;
+    idCounting = idScores;
 
-
+    console.log('idscore', idCounting)
     console.log('Rota /spawn foi acessada. Iniciando o programa C++...');
 
     // Iniciar o programa C++ como um processo separado
@@ -252,15 +262,38 @@ app.get('/videos', (req, res) => {
 app.get('/scale', (req, res) => {
   const parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }));
 
+  port.open((err) => {
+    console.log('ERROR', err)
+    // if (err) {
+    //   console.error('Erro ao abrir a porta serial:', err.message);
+    //   res.status(500).json({ error: 'Erro ao abrir a porta serial' });
+    //   return;
+    // }
 
-  parser.on('data', handleSendData);
+    parser.on('data', handleSendData);
 
-  function handleSendData(scale: string) {
-    res.status(200).json({
-      scale: scale,
-    });
-    parser.pause();
-  }
+    function handleSendData(scale: string) {
+      res.status(200).json({
+        scale: scale,
+      });
+      parser.pause();
+      port.close((err) => {
+        if (err) {
+          console.error('Erro ao fechar a porta serial:', err.message);
+        } else {
+          console.log('Porta serial fechada com sucesso.');
+        }
+      });
+    }
+});
+
+port.on('error', (err) => {
+console.error('Erro na porta serial:', err.message);
+res.status(500).json({ error: 'Erro na porta serial' });
+});
+// res.status(200).json({
+// scale: 10,
+// });
 });
 
 // WebSocket

@@ -17,6 +17,14 @@ class ScoresRepository implements IScoresRepository {
     return scores;
   }
 
+  public async findAllStatus(status: boolean): Promise<Score[]> {
+    const scores = await this.ormRepository.find({
+      where: { status },
+    });
+
+    return scores;
+  }
+
   public async findById(id: string): Promise<Score | undefined> {
     const score = await this.ormRepository.findOne({
       where: { id },
