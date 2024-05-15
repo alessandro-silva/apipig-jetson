@@ -260,40 +260,49 @@ app.get('/videos', (req, res) => {
 });
 
 app.get('/scale', (req, res) => {
-  const parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }));
+  const { balance } = req.params;
 
-  port.open((err) => {
-    console.log('ERROR', err)
-    // if (err) {
-    //   console.error('Erro ao abrir a porta serial:', err.message);
-    //   res.status(500).json({ error: 'Erro ao abrir a porta serial' });
-    //   return;
-    // }
+  if (balance === 'online') {
+    const parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }));
 
-    parser.on('data', handleSendData);
+    port.open((err) => {
+      console.log('ERROR', err)
+      // if (err) {
+      //   console.error('Erro ao abrir a porta serial:', err.message);
+      //   res.status(500).json({ error: 'Erro ao abrir a porta serial' });
+      //   return;
+      // }
 
-    function handleSendData(scale: string) {
-      res.status(200).json({
-        scale: scale,
-      });
-      parser.pause();
-      port.close((err) => {
-        if (err) {
-          console.error('Erro ao fechar a porta serial:', err.message);
-        } else {
-          console.log('Porta serial fechada com sucesso.');
-        }
-      });
-    }
-});
+      parser.on('data', handleSendData);
 
-port.on('error', (err) => {
-console.error('Erro na porta serial:', err.message);
-res.status(500).json({ error: 'Erro na porta serial' });
-});
-// res.status(200).json({
-// scale: 10,
-// });
+      function handleSendData(scale: string) {
+        res.status(200).json({
+          scale: scale,
+        });
+        parser.pause();
+        port.close((err) => {
+          if (err) {
+            console.error('Erro ao fechar a porta serial:', err.message);
+          } else {
+            console.log('Porta serial fechada com sucesso.');
+          }
+        });
+      }
+    });
+
+    port.on('error', (err) => {
+      console.error('Erro na porta serial:', err.message);
+      res.status(500).json({ error: 'Erro na porta serial' });
+    });
+  } else {
+    return res.status(200).json({
+      scale: 0,
+    });
+  }
+
+  // res.status(200).json({
+  // scale: 10,
+  // });
 });
 
 // WebSocket
